@@ -4,38 +4,47 @@
   <meta charset="utf-8" />
   <title>Obsidian Redirect</title>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const target = params.get("t");
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var t = params.get("t");
 
-    // Mapping-Liste: Kurznamen → Obsidian-URIs
-    const redirects = {
-      tagesnotiz: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&daily=true",
-      erfolge: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&filepath=04%20Journal/Erfolge.md",
-      optimierung: "obsidian://quickadd?choice=Optimierung"
-    };
+      // Mapping: Kurzname -> Obsidian-URI
+      var redirects = {
+        tagesnotiz: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&daily=true",
+        erfolge: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&filepath=04%20Journal/Erfolge.md",
+        optimierung: "obsidian://quickadd?choice=Optimierung"
+      };
 
-    if (redirects[target]) {
-      // Sofortiger Redirect
-      window.location.href = redirects[target];
-      // Fallback nach 1,5 Sekunden
-      setTimeout(() => {
-        document.getElementById("fallback").style.display = "block";
-        document.getElementById("link").href = redirects[target];
-      }, 1500);
-    } else {
-      document.write("<h1>Kein Redirect gefunden</h1>");
-    }
+      var target = redirects[t];
+
+      function showFallback() {
+        var fb = document.getElementById("fallback");
+        var link = document.getElementById("link");
+        if (target) link.href = target;
+        fb.style.display = "block";
+      }
+
+      if (target) {
+        // Sofort weiterleiten
+        window.location.href = target;
+        // Fallback nach 1500 ms anzeigen
+        setTimeout(showFallback, 1500);
+      } else {
+        document.getElementById("unknown").style.display = "block";
+      }
+    })();
   </script>
   <style>
-    body { font-family: system-ui; margin: 2rem; }
-    #fallback { display: none; margin-top: 1rem; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 2rem; }
+    #fallback, #unknown { display: none; }
   </style>
 </head>
 <body>
-  <h1>Redirect läuft…</h1>
+  <h1>Redirect laeuft ...</h1>
   <p id="fallback">
     Wenn Obsidian nicht automatisch startet, bitte
     <a id="link" href="#">hier klicken</a>.
   </p>
+  <p id="unknown"><strong>Kein Redirect gefunden.</strong> Beispiel: <code>?t=erfolge</code></p>
 </body>
 </html>
