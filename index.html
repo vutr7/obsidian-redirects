@@ -3,48 +3,67 @@
 <head>
   <meta charset="utf-8" />
   <title>Obsidian Redirect</title>
-  <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var t = params.get("t");
-
-      // Mapping: Kurzname -> Obsidian-URI
-      var redirects = {
-        tagesnotiz: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&daily=true",
-        erfolge: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&filepath=04%20Journal/Erfolge.md",
-        optimierung: "obsidian://quickadd?choice=Optimierung"
-      };
-
-      var target = redirects[t];
-
-      function showFallback() {
-        var fb = document.getElementById("fallback");
-        var link = document.getElementById("link");
-        if (target) link.href = target;
-        fb.style.display = "block";
-      }
-
-      if (target) {
-        // Sofort weiterleiten
-        window.location.href = target;
-        // Fallback nach 1500 ms anzeigen
-        setTimeout(showFallback, 1500);
-      } else {
-        document.getElementById("unknown").style.display = "block";
-      }
-    })();
-  </script>
   <style>
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; margin: 2rem; }
     #fallback, #unknown { display: none; }
   </style>
+  <script>
+    function tryRedirect(uri) {
+      // 1) Direkt
+      try { window.location.href = uri; } catch(e) {}
+      // 2) assign/replace (manche Browser reagieren besser)
+      setTimeout(() => { try { window.location.assign(uri); } catch(e) {} }, 30);
+      setTimeout(() => { try { window.location.replace(uri); } catch(e) {} }, 60);
+      // 3) Auto-Click auf versteckten <a>
+      setTimeout(() => {
+        const a = document.createElement('a');
+        a.href = uri;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        try { a.click(); } catch(e) {}
+      }, 90);
+      // 4) Iframe-Fallback (funktioniert oft auf Desktop)
+      setTimeout(() => {
+        const ifr = document.createElement('iframe');
+        ifr.style.display = 'none';
+        ifr.src = uri;
+        document.body.appendChild(ifr);
+      }, 120);
+      // 5) Sichtbarer Fallback-Link nach 1500 ms
+      setTimeout(() => {
+        const fb = document.getElementById("fallback");
+        const link = document.getElementById("link");
+        link.href = uri;
+        fb.style.display = "block";
+      }, 1500);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const t = params.get("t");
+
+      // Mapping: Kurzname -> Obsidian-URI
+      const redirects = {
+        tagesnotiz: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&daily=true",
+        erfolge:    "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&filepath=04%20Journal/Erfolge.md",
+        optimierung:"obsidian://quickadd?choice=Optimierung"
+      };
+
+      const target = redirects[t];
+      if (!target) {
+        document.getElementById('unknown').style.display = 'block';
+        return;
+      }
+      tryRedirect(target);
+    });
+  </script>
 </head>
 <body>
-  <h1>Redirect laeuft ...</h1>
+  <h1>Redirect läuft …</h1>
   <p id="fallback">
-    Wenn Obsidian nicht automatisch startet, bitte
+    Falls Obsidian nicht automatisch startet, bitte
     <a id="link" href="#">hier klicken</a>.
   </p>
-  <p id="unknown"><strong>Kein Redirect gefunden.</strong> Beispiel: <code>?t=erfolge</code></p>
+  <p id="unknown"><strong>Kein Redirect gefunden.</strong> Beispiel: <code>?t=optimierung</code></p>
 </body>
 </html>
