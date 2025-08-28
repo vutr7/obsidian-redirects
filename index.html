@@ -9,12 +9,9 @@
   </style>
   <script>
     function tryRedirect(uri) {
-      // 1) Direkt
       try { window.location.href = uri; } catch(e) {}
-      // 2) assign/replace (manche Browser reagieren besser)
       setTimeout(() => { try { window.location.assign(uri); } catch(e) {} }, 30);
       setTimeout(() => { try { window.location.replace(uri); } catch(e) {} }, 60);
-      // 3) Auto-Click auf versteckten <a>
       setTimeout(() => {
         const a = document.createElement('a');
         a.href = uri;
@@ -22,31 +19,33 @@
         document.body.appendChild(a);
         try { a.click(); } catch(e) {}
       }, 90);
-      // 4) Iframe-Fallback (funktioniert oft auf Desktop)
       setTimeout(() => {
         const ifr = document.createElement('iframe');
         ifr.style.display = 'none';
         ifr.src = uri;
         document.body.appendChild(ifr);
       }, 120);
-      // 5) Sichtbarer Fallback-Link nach 1500 ms
+      // Fallback sichtbar machen
       setTimeout(() => {
         const fb = document.getElementById("fallback");
         const link = document.getElementById("link");
         link.href = uri;
         fb.style.display = "block";
       }, 1500);
+      // Tab nach 2s automatisch schließen
+      setTimeout(() => {
+        window.close();
+      }, 2000);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const t = params.get("t");
 
-      // Mapping: Kurzname -> Obsidian-URI
       const redirects = {
         tagesnotiz: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&daily=true",
-        erfolge:    "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&filepath=04%20Journal/Erfolge.md",
-        optimierung:"obsidian://quickadd?choice=Optimierung"
+        erfolge: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&filepath=04%20Journal/Erfolge.md",
+        optimierung: "obsidian://quickadd?choice=Optimierung"
       };
 
       const target = redirects[t];
