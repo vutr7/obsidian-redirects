@@ -43,9 +43,16 @@
       const t = params.get("t");
 
       const redirects = {
+        // bestehend
         tagesnotiz: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&daily=true",
         erfolge: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&filepath=04%20Journal/Erfolge.md",
-        optimierung: "obsidian://quickadd?choice=Optimierung"
+        optimierung: "obsidian://quickadd?choice=Optimierung",
+
+        // neu: Periodic Notes via Actions URI
+        weekly:    "obsidian://actions-uri/note/open?periodic-note=weekly&vault=MINH%20TRUNG%20VU",
+        monthly:   "obsidian://actions-uri/note/open?periodic-note=monthly&vault=MINH%20TRUNG%20VU",
+        quarterly: "obsidian://actions-uri/note/open?periodic-note=quarterly&vault=MINH%20TRUNG%20VU",
+        yearly:    "obsidian://actions-uri/note/open?periodic-note=yearly&vault=MINH%20TRUNG%20VU"
       };
 
       const target = redirects[t];
@@ -63,6 +70,6 @@
     Falls Obsidian nicht automatisch startet, bitte
     <a id="link" href="#">hier klicken</a>.
   </p>
-  <p id="unknown"><strong>Kein Redirect gefunden.</strong> Beispiel: <code>?t=optimierung</code></p>
+  <p id="unknown"><strong>Kein Redirect gefunden.</strong> Beispiele: <code>?t=weekly</code>, <code>?t=monthly</code>, <code>?t=quarterly</code>, <code>?t=yearly</code></p>
 </body>
 </html>
