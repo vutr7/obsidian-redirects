@@ -48,11 +48,11 @@
         erfolge: "obsidian://advanced-uri?vault=MINH%20TRUNG%20VU&filepath=04%20Journal/Erfolge.md",
         optimierung: "obsidian://quickadd?choice=Optimierung",
 
-        // neu: Periodic Notes via Actions URI
-        weekly:    "obsidian://actions-uri/note/open?periodic-note=weekly&vault=MINH%20TRUNG%20VU",
-        monthly:   "obsidian://actions-uri/note/open?periodic-note=monthly&vault=MINH%20TRUNG%20VU",
-        quarterly: "obsidian://actions-uri/note/open?periodic-note=quarterly&vault=MINH%20TRUNG%20VU",
-        yearly:    "obsidian://actions-uri/note/open?periodic-note=yearly&vault=MINH%20TRUNG%20VU"
+        // neu: Periodic Notes via Advanced URI (erstellt bei Bedarf)
+        weekly:    "obsidian://adv-uri?vault=MINH%20TRUNG%20VU&commandid=periodic-notes%3Aopen-weekly-note",
+        monthly:   "obsidian://adv-uri?vault=MINH%20TRUNG%20VU&commandid=periodic-notes%3Aopen-monthly-note",
+        quarterly: "obsidian://adv-uri?vault=MINH%20TRUNG%20VU&commandid=periodic-notes%3Aopen-quarterly-note",
+        yearly:    "obsidian://adv-uri?vault=MINH%20TRUNG%20VU&commandid=periodic-notes%3Aopen-yearly-note"
       };
 
       const target = redirects[t];
